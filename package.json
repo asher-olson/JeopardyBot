@@ -1,0 +1,23 @@
+{
+  "name": "jeopardybot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asher-olson/JeopardyBot.git"
+  },
+  "author": "Asher Olson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asher-olson/JeopardyBot/issues"
+  },
+  "homepage": "https://github.com/asher-olson/JeopardyBot#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "mongodb": "^4.5.0"
+  }
+}
