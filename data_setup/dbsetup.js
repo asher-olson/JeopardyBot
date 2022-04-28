@@ -1,9 +1,9 @@
 const { MongoClient } = require("mongodb");
 const fs = require('fs');
-// HkpcuryhyhLazLj4
-const pwd = process.env.jeopardybot_password;
 
-const uri = `mongodb+srv://asher:HkpcuryhyhLazLj4@cluster0.u5pnm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
+const dbpass = process.env.MongoDBPass;
+
+const uri = `mongodb+srv://asher:${dbpass}@cluster0.u5pnm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
 
 
 function run() {
