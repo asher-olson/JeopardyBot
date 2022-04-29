@@ -55,7 +55,19 @@ async function sendScoreSummaryToServer(channel){
 
     var list = "";
     for(let i = 0; i < 10 && i < scores.length; i++){
-        list = list + `${i+1}. <@${scores[i].userId}>:  ${scores[i].score}\n`;
+        // make first 3 emojis
+        if(i === 0){
+            list = list + `🥇 <@${scores[i].userId}>:  ${scores[i].score}\n`;
+        }
+        else if(i === 1){
+            list = list + `🥈 <@${scores[i].userId}>:  ${scores[i].score}\n`;
+        }
+        else if(i === 2){
+            list = list + `🥉 <@${scores[i].userId}>:  ${scores[i].score}\n`;
+        } else {
+            list = list + ` ${i+1}. <@${scores[i].userId}>:  ${scores[i].score}\n`;
+        }
+        
     }
 
     channel.send(`---Leaderboard---\n\n${list}`);
@@ -95,7 +107,7 @@ bot.once('ready', async () => {
     });
 
     sendQuestionToAllServers();
-    const iv = setInterval(sendQuestionToAllServers, SEC_IN_DAY * (1000 / (24 * 3)));
+    const iv = setInterval(sendQuestionToAllServers, SEC_IN_DAY * (1000 / (24 * 2)));
     return;
 });
 
@@ -153,7 +165,7 @@ bot.on('messageCreate', async (msg) => {
             //update in database
             const db = client.db("GuildsDB");
             const collection = db.collection("guild");
-            await collection.updateOne({"guildId": msg.guild.id}, {$set: {"channelId": matches.at(0).id}});
+            await collection.updateOne({"guildId": msg.guild.id}, {$set: {"channelId": matches.at(0).id, "name": matches.at(0).name}});
 
             msg.channel.send("channel set, new questions will be asked in " + matches.at(0).name);
         } else {
@@ -164,10 +176,10 @@ bot.on('messageCreate', async (msg) => {
 
     let leaderboardRegex = /^!leaderboard/;
     if(content.match(leaderboardRegex)){
-        sendScoreSummaryToServer(channelManager.getChannel(msg.guild.id));
+        sendScoreSummaryToServer(msg.channel);
         return;
     }
-
+    
     let useRegex = /^!use/;
     if(content.match(useRegex)){
         console.log("use");
@@ -203,7 +215,7 @@ async function sendQuestionToAllServers(){
 
                 // get role @Jeopardy
                 let g = bot.guilds.cache.get(guild.id);
-                let role = g.roles.cache.find(role => role.name === "jeopardy");
+                let role = g.roles.cache.find(role => role.name === "Jeopardy");
 
                 let channel = channelManager.getChannel(guild.id);
                 if(channel === null){
@@ -225,13 +237,17 @@ async function sendQuestionToAllServers(){
                     // add to database
                     const db = client.db("GuildsDB");
                     const collection = db.collection("guild");
-                    collection.insertOne({"guildId": guild.id, "channelId": channel.id, "name": channel.name, "jRoleId": role.id});
+                    collection.insertOne({"guildId": guild.id, "channelId": channel.id, "name": channel.name, "jRoleId": (role === undefined) ? undefined : role.id});
                 }
 
                 
                 // console.log(role.id);
                 // send question to channel
                 bot.channels.cache.get(channel.id).send(`${(role === undefined) ? "" : "<@&" + role.id + ">\n"}${prevQuestionInfo}--- NEW QUESTION ---\n\nCategory: ${question.category}\nClue: ${question.clue}\nReward: ${question.reward}`);
+                // const st = "(hello what the fuck)";
+                // st.replace("(", "");
+                // st.replace("hello", "");
+                // console.log(st);
                 return;
             });
         });
