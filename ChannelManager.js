@@ -3,11 +3,11 @@
 export default class ChannelManager{
     constructor(){
         this.channels = {
-            "<guildId>": { 
-                "id": "<channelId>",
-                "name": "<channelName>",
-                "jRoleId": "<Jeopardy Role Id>"
-            }
+            // "<guildId>": { 
+            //     "id": "<channelId>",
+            //     "name": "<channelName>",
+            //     "jRoleId": "<Jeopardy Role Id>"
+            // }
         }
     }
 

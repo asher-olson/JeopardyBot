@@ -11,8 +11,6 @@ export default class QuestionManager{
     }
 
     setQuestion(guildId, question){
-        console.log("adding this:");
-        console.log(question);
         this.servers[guildId] = {
             "clue": question.clue,
             "answer": question.answer,
@@ -39,6 +37,9 @@ export default class QuestionManager{
         var numNonPrep = 0;
         let preps = ["the", "a", "and", "&"];    //add more?
         correctTokens.forEach(token => {
+            // TODO: replace '\', '(' and ')' to avoid bullshit
+            let removeRegex = /\(|\)|\\/g;
+            token = token.replace(removeRegex, '');
             if(preps.includes(token)){  //dont count prepositions
                 return;
             }

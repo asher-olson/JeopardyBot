@@ -86,7 +86,6 @@ async function addScore(guildId, userId, userName, score){
     }
 
     return;
-    // console.log(obj);
 }
 
 
@@ -158,7 +157,7 @@ bot.on('messageCreate', async (msg) => {
         let newChannel = msg.content.split(" ")[1];
         console.log(newChannel);
         let matches = bot.channels.cache.filter(channel => channel.name === newChannel && channel.type === "GUILD_TEXT");
-        // console.log(matches.at(0));
+
         if(matches.size > 0){
             channelManager.setChannel(msg.guild.id, {"id": matches.at(0).id, "name": matches.at(0).name});
 
@@ -196,8 +195,7 @@ async function sendQuestionToAllServers(){
     await bot.guilds.fetch()
     .then(guilds => {
         guilds.forEach(async (guild) => {
-            // console.log(guild);
-            if(TESTING){
+            if(TESTING){    //only send questions to my server
                 if(guild.name !== "Asher"){
                     return;
                 }
@@ -240,14 +238,9 @@ async function sendQuestionToAllServers(){
                     collection.insertOne({"guildId": guild.id, "channelId": channel.id, "name": channel.name, "jRoleId": (role === undefined) ? undefined : role.id});
                 }
 
-                
-                // console.log(role.id);
                 // send question to channel
                 bot.channels.cache.get(channel.id).send(`${(role === undefined) ? "" : "<@&" + role.id + ">\n"}${prevQuestionInfo}--- NEW QUESTION ---\n\nCategory: ${question.category}\nClue: ${question.clue}\nReward: ${question.reward}`);
-                // const st = "(hello what the fuck)";
-                // st.replace("(", "");
-                // st.replace("hello", "");
-                // console.log(st);
+                
                 return;
             });
         });
