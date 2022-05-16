@@ -13,7 +13,6 @@ export default class ChannelManager{
 
     setChannel(guildId, channelObj){
         this.channels[guildId] = channelObj;
-        // console.log(this.channels);
     }
 
     getChannel(guildId){
