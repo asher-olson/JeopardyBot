@@ -24,12 +24,13 @@ export default class ChannelManager{
 
     setJRole(guildId, jrole){
         this.channels[guildId]["jRoleId"] = jrole;
+        // console.log(`channels: ${this.channels}`);
     }
 
     getJRole(guildId){
-        if(!(guildId in this.channels) || !(["jRoleId"] in this.channels[guildId])){
-            return null;
-        }
+        // if(!(guildId in this.channels) || !(["jRoleId"] in this.channels[guildId])){
+        //     return null;
+        // }
         return this.channels[guildId]["jRoleId"];
     }
 }

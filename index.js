@@ -8,8 +8,8 @@ import IntervalManager from "./IntervalManager.js";
 const DB_SIZE = 48358;
 const SEC_IN_DAY = 86400;
 const SEC_IN_HOUR = 3600;
-const TESTING = true;
-const DD_PROBABILITY = 100; // out of 100, 25 -> 25% chance
+const TESTING = false;
+const DD_PROBABILITY = 8; // out of 100, 25 -> 25% chance
 
 // connect to mongo database
 const dbpass = process.env.MongoDBPass;
@@ -67,15 +67,15 @@ async function sendScoreSummaryToServer(channel){
     for(let i = 0; i < 10 && i < scores.length; i++){
         // make first 3 emojis
         if(i === 0){
-            list = list + `🥇 <@${scores[i].userId}>:  ${scores[i].score}\n`;
+            list = list + `🥇 ${scores[i].userName}:  ${scores[i].score}\n`;
         }
         else if(i === 1){
-            list = list + `🥈 <@${scores[i].userId}>:  ${scores[i].score}\n`;
+            list = list + `🥈 ${scores[i].userName}:  ${scores[i].score}\n`;
         }
         else if(i === 2){
-            list = list + `🥉 <@${scores[i].userId}>:  ${scores[i].score}\n`;
+            list = list + `🥉 ${scores[i].userName}:  ${scores[i].score}\n`;
         } else {
-            list = list + ` ${i+1}.  <@${scores[i].userId}>:  ${scores[i].score}\n`;
+            list = list + ` ${i+1}.  ${scores[i].userName}:  ${scores[i].score}\n`;
         }
         
     }
@@ -349,6 +349,15 @@ bot.on('messageCreate', async (msg) => {
         msg.channel.send(`<@${msg.author.id}> you got it! Here's your question:\n\nCategory: ${q.category}\nClue: ${q.clue}`);
 
     }
+
+    // let roleRegex = /^!role/;
+    // if(content.match(roleRegex)){
+    //     let role = channelManager.getJRole(msg.guild.id);
+    //     console.log(msg.author.roles);
+    //     let memb = msg.guild.members;
+    //     console.log(memb);
+
+    // }
     
     let useRegex = /^!use/;
     if(content.match(useRegex)){
@@ -429,6 +438,8 @@ async function sendQuestionToAllServers(){
                 // get role @Jeopardy
                 let g = bot.guilds.cache.get(guild.id);
                 let role = g.roles.cache.find(role => role.name === "Jeopardy");
+                console.log(`setting role for ${guild.id}: ${role}`)
+                channelManager.setJRole(guild.id, role);
 
                 let channel = channelManager.getChannel(guild.id);
                 if(channel === null){
@@ -492,7 +503,9 @@ async function sendQuestionToServer(guildId){
 
         // get role @Jeopardy
         let g = bot.guilds.cache.get(guildId);
+        console.log(`after g, ${guildId}`);
         let role = g.roles.cache.find(role => role.name === "Jeopardy");
+        channelManager.setJRole(guildId, role);
 
         let channel = channelManager.getChannel(guildId);
         if(channel === null){
